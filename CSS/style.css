@@ -1,0 +1,288 @@
+body {
+
+}
+
+#memberView {
+
+}
+
+#headerBox {
+    width:100%;
+    height:130px;
+    background-color:#B3C481;
+    padding:5px;
+}
+
+#userIdentity {
+    font-family:Arial;
+    color:white;
+    margin:10px;
+    padding:1px;
+}
+
+#loginMessage {
+    color:seagreen;
+    position:absolute;
+    margin-top:40px;
+    margin-left:10px;
+}
+
+#logoutButton {
+    margin-left:10px;
+    margin-top:8px;
+}
+
+#mainTitle {
+    text-align:center;
+    font-family: "Arial Narrow", Arial, sans-serif;
+    color:white;
+    font-size:3em;
+    text-shadow: 2px 1px 2px rgba(29, 79, 21, 0.65);
+    margin-top:10px;
+}
+
+#mainTitleLoggedIn {
+    text-align:center;
+    font-family: "Arial Narrow", Arial, sans-serif;
+    color:white;
+    font-size:3em;
+    text-shadow: 2px 1px 2px rgba(29, 79, 21, 0.65);
+    margin-top:-16px;
+}
+
+#uploadButton {
+    margin-top:5px;
+    -moz-box-shadow: inset 0px 1px 0px 0px #9acc85;
+    -webkit-box-shadow: inset 0px 1px 0px 0px #9acc85;
+    box-shadow: inset 0px 1px 0px 0px #9acc85;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #7db87f), color-stop(1, #4ba36a));
+    background: -moz-linear-gradient(top, #7db87f 5%, #4ba36a 100%);
+    background: -webkit-linear-gradient(top, #7db87f 5%, #4ba36a 100%);
+    background: -o-linear-gradient(top, #7db87f 5%, #4ba36a 100%);
+    background: -ms-linear-gradient(top, #7db87f 5%, #4ba36a 100%);
+    background: linear-gradient(to bottom, #7db87f 5%, #4ba36a 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7db87f', endColorstr='#4ba36a', GradientType=0);
+    background-color: #7db87f;
+    border: 1px solid #418759;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: arial;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 6px 12px;
+    text-decoration: none;
+}
+
+#uploadButton:hover {
+    cursor:pointer;
+}
+
+#uploadBox {
+    margin:auto;
+    text-align:center;
+}
+
+#article {
+    font-family:Arial;
+    width:360px;
+    height:340px;
+    border: 1px solid forestgreen;
+    padding:12px;
+    margin:auto;
+    margin-top:20px;
+}
+
+#article p {
+    margin-top:19px;
+    font-size:16px;
+}
+
+#errorMSG {
+    font-size:16px;
+}
+
+#file {
+    float:left;
+}
+
+#imgDescription {
+    margin-top:-10px;
+    float:left;
+}
+
+#submit {
+    margin-top:10px;
+    float:left;
+}
+
+#loginBox {
+    font-family:Arial;
+    width:430px;
+    height:100%;
+    padding:15px;
+    border: 1px solid forestgreen;
+    text-align:center;
+    margin:auto;
+    margin-top:20px;
+
+}
+
+fieldset {
+    background-color:#D9E5BF;
+}
+
+#text {
+    float:left;
+    margin:1px;
+}
+
+#box {
+    margin:1px;
+
+}
+
+#checkBox {
+    margin:1px;
+    margin-right:220px;
+}
+
+.form-inline {
+    margin:auto;
+    text-align:center;
+    margin-left:40%;
+    padding-bottom:22px;
+}
+
+.form-group {
+    float:left;
+    margin:10px;
+    display:inline-block;
+}
+
+#memeButton:hover {
+    cursor:pointer;
+}
+
+#natureButton:hover {
+    cursor:pointer;
+}
+
+#foodButton:hover {
+    cursor:pointer;
+}
+
+#alternativeButton:hover {
+    cursor:pointer;
+}
+
+#imgArticle {
+    font-family:Arial;
+    display:block;
+    width:600px;
+    height:100%;
+    border: 1px solid forestgreen;
+    padding:12px;
+    margin:auto;
+    margin-top:20px;
+    text-align:left;
+    max-width: 600px;
+    word-wrap: break-word;
+}
+
+#description {
+    text-align:left;
+}
+
+#image {
+    margin-left:50px;
+    border: 2px solid black;
+}
+
+#deleteFileButton {
+    float:right;
+    position:relative;
+    font-style:arial bold;
+    margin-top: -13px;
+    margin-right: -13px;
+
+    -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    box-shadow:inset 0px 1px 0px 0px #f5978e;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #d67c75), color-stop(1, #992e26) );
+    background:-moz-linear-gradient( center top, #d67c75 5%, #992e26 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#d67c75', endColorstr='#992e26');
+    background-color:#d67c75;
+    -webkit-border-top-left-radius:0px;
+    -moz-border-radius-topleft:0px;
+    border-top-left-radius:0px;
+    -webkit-border-top-right-radius:0px;
+    -moz-border-radius-topright:0px;
+    border-top-right-radius:0px;
+    -webkit-border-bottom-right-radius:0px;
+    -moz-border-radius-bottomright:0px;
+    border-bottom-right-radius:0px;
+    -webkit-border-bottom-left-radius:23px;
+    -moz-border-radius-bottomleft:23px;
+    border-bottom-left-radius:23px;
+    text-indent:2.56px;
+    border:1px solid #96352e;
+    display:inline-block;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:23px;
+    font-weight:bold;
+    font-style:normal;
+    height:36px;
+    line-height:36px;
+    width:64px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #31824e;
+}
+
+#deleteFileButton:hover {
+    cursor:pointer;
+}
+
+#commentText {
+    margin-left:9px;
+    font-family: "Arial Narrow", Arial, sans-seriftimes new roman;
+}
+
+#commentBox {
+    text-align:left;
+    position:relative;
+    margin:10px;
+    margin-top:-5px;
+}
+
+#submitComment {
+    margin-left:533px;
+}
+
+#comments {
+    border: 1px solid lightgrey;
+    margin:7px;
+    background-color:#E6FEDD;
+}
+
+#comments p {
+    margin-left:5px;
+    margin-top:-10px;
+}
+
+#deleteComment {
+    margin-left:555px;
+    margin-top:5px;
+}
+
+#deleteComment:hover {
+    cursor:pointer;
+}
+
+#submitComment:hover {
+    cursor:pointer;
+}
+
+

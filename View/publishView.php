@@ -12,7 +12,7 @@ class PublishView {
     private $message;
 
     public function __construct() {
-        $this->loginModel = new loginModel();
+        $this->loginModel = new LoginModel();
     }
     public function didUserPressLogoutButton() {
         if (isset($_POST['logoutButton'])) {
@@ -55,7 +55,7 @@ class PublishView {
         }
     }
 
-    public function getImageDescription() {
+    public function getFileDescription() {
         if (isset($_POST['description'])) {
             return $_POST['description'];
         }

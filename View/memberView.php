@@ -30,27 +30,9 @@ class MemberView {
         }
     }
 
-    public function didUserPressMemeCategory() {
-        if (isset($_POST['memeButton'])) {
-            return $_POST['memeButton'];
-        }
-    }
-
-    public function didUserPressNatureCategory() {
-        if (isset($_POST['natureButton'])) {
-            return $_POST['natureButton'];
-        }
-    }
-
-    public function didUserPressFoodCategory() {
-        if (isset($_POST['foodButton'])) {
-            return $_POST['foodButton'];
-        }
-    }
-
-    public function didUserPressAlternativeCategory() {
-        if (isset($_POST['alternativeButton'])) {
-            return $_POST['alternativeButton'];
+    public function didUserChoseCategory() {
+        if (isset($_POST['categoryButton'])) {
+            return $_POST['categoryButton'];
         }
     }
 
@@ -67,8 +49,10 @@ class MemberView {
     }
 
     public function didUserComment() {
-        if (isset($_POST['submitComment'])) {
+        if (isset($_POST['submitComment']) && !empty($_POST['comment'])) {
             return $_POST['submitComment'];
+        } else {
+            return false;
         }
     }
 
@@ -110,28 +94,33 @@ class MemberView {
                         <div class = 'form-inline'>
                             <form method='POST' action='?memes'>
                             <div class = 'form-group'>
-                            <input id='memeButton' type='submit' name='memeButton' value='Memes'>
+                            <input id='memeButton' type='submit' value='Memes'>
+                            <input type='hidden' name='categoryButton' value='1'>
                             </div>
                             </form>
                             <form method='POST' action='?natur'>
                             <div class = 'form-group'>
-                            <input id='natureButton' type='submit' name='natureButton' value='Natur'>
+                            <input id='natureButton' type='submit' value='Natur'>
+                            <input type='hidden' name='categoryButton' value='2'>
                             </div>
                             </form>
                             <form method='POST' action='?mat'>
                             <div class = 'form-group'>
-                            <input id='foodButton' type='submit' name='foodButton' value='Mat'>
+                            <input id='foodButton' type='submit' value='Mat'>
+                            <input type='hidden' name='categoryButton' value='3'>
                             </div>
                             </form>
                             <form method='POST' action='?ovrigt'>
                             <div class = 'form-group'>
-                            <input id='alternativeButton' type='submit' name='alternativeButton' value='Övrigt'>
+                            <input id='alternativeButton' type='submit' value='Övrigt'>
+                            <input type='hidden' name='categoryButton' value='4'>
                             </div>
                             </form>
                         </div>
                         ";
-        if ($this->didUserPressMemeCategory()) {
-            $this->categoryID = $_POST['memeButton'];
+
+        if ($this->didUserChoseCategory()) {
+            $this->categoryID = $_POST['categoryButton'];
             //this->files contains all the objects from the db that have the chosen categorytype.
             $this->files = $this->publishModel->getFilesFromDB($this->categoryID);
 
@@ -151,114 +140,6 @@ class MemberView {
                 <input id='submitComment' type='submit' value='Skicka'>
                 </form>";
                 //Loop through all the comments connected to the specific file.
-                foreach ($this->publishModel->getCommentsFromDB($file[2]) as $comment) {
-                    $ret .= "
-                        <div id = comments>
-                        <form method='POST' action=?main>
-                        <input id='deleteComment' type='hidden' name='deleteComment' value='$comment[1]'>
-                        <input id='deleteComment' type='submit' value='X'>
-                        </form>
-                        <p>$comment[0]</p>
-                        </div>
-                        ";
-                }
-                $ret .= "
-                </div>";
-            }
-            $ret .=" </div>";
-
-            return $ret;
-        }
-        if ($this->didUserPressNatureCategory()) {
-            $this->categoryID = $_POST['natureButton'];
-            $this->files = $this->publishModel->getFilesFromDB($this->categoryID);
-            foreach ($this->files as $file) {
-
-                $ret .= "<div id = 'imgArticle'>
-                <form method='POST' action='?main'>
-                <input id='deleteFileButton' type='hidden' name='deleteFileButton' value='$file[0]'>
-                <input id='deleteFileButton' type='submit' value='X'>
-                </form>
-                <img id = 'image' src=$file[0] alt='image' width='470'>";
-                $ret .= "<p>$file[1]</p>
-                <p id='commentText'>Ange kommentar:</p>
-                <form method='POST' action=?main>
-                <textarea id='commentBox' rows='4' cols='71' name='comment'></textarea>
-                <input id='submitComment' type='hidden' name='submitComment' value='$file[0]'>
-                <input id='submitComment' type='submit' value='Skicka'>
-                </form>";
-                foreach ($this->publishModel->getCommentsFromDB($file[2]) as $comment) {
-                    $ret .= "
-                        <div id = comments>
-                        <form method='POST' action=?main>
-                        <input id='deleteComment' type='hidden' name='deleteComment' value='$comment[1]'>
-                        <input id='deleteComment' type='submit' value='X'>
-                        </form>
-                        <p>$comment[0]</p>
-                        </div>
-                        ";
-                }
-                $ret .= "
-                </div>";
-            }
-            $ret .=" </div>";
-
-            return $ret;
-        }
-        if ($this->didUserPressFoodCategory()) {
-            $this->categoryID = $_POST['foodButton'];
-            $this->files = $this->publishModel->getFilesFromDB($this->categoryID);
-
-            foreach ($this->files as $file) {
-                $ret .= "<div id = 'imgArticle'>
-                <form method='POST' action='?main'>
-                <input id='deleteFileButton' type='hidden' name='deleteFileButton' value='$file[0]'>
-                <input id='deleteFileButton' type='submit' value='X'>
-                </form>
-                <img id = 'image' src=$file[0] alt='image' width='470'>";
-                $ret .= "<p>$file[1]</p>
-                <p id='commentText'>Ange kommentar:</p>
-                <form method='POST' action=?main>
-                <textarea id='commentBox' rows='4' cols='71' name='comment'></textarea>
-                <input id='submitComment' type='hidden' name='submitComment' value='$file[0]'>
-                <input id='submitComment' type='submit' value='Skicka'>
-                </form>";
-                foreach ($this->publishModel->getCommentsFromDB($file[2]) as $comment) {
-                    $ret .= "
-                        <div id = comments>
-                        <form method='POST' action=?main>
-                        <input id='deleteComment' type='hidden' name='deleteComment' value='$comment[1]'>
-                        <input id='deleteComment' type='submit' value='X'>
-                        </form>
-                        <p>$comment[0]</p>
-                        </div>
-                        ";
-                }
-                $ret .= "
-                </div>";
-            }
-            $ret .=" </div>";
-
-            return $ret;
-        }
-        if ($this->didUserPressAlternativeCategory()) {
-            $this->categoryID = $_POST['alternativeButton'];
-            $this->files = $this->publishModel->getFilesFromDB($this->categoryID);
-
-            foreach ($this->files as $file) {
-                $ret .= "<div id = 'imgArticle'>
-                <form method='POST' action='?main'>
-                <input id='deleteFileButton' type='hidden' name='deleteFileButton' value='$file[0]'>
-                <input id='deleteFileButton' type='submit' value='X'>
-                </form>
-                <img id = 'image' src=$file[0] alt='image' width='470'>";
-                $ret .= "<p>$file[1]</p>
-                <p id='commentText'>Ange kommentar:</p>
-                <form method='POST' action=?main>
-                <textarea id='commentBox' rows='4' cols='71' name='comment'></textarea>
-                <input id='submitComment' type='hidden' name='submitComment' value='$file[0]'>
-                <input id='submitComment' type='submit' value='Skicka'>
-                </form>";
                 foreach ($this->publishModel->getCommentsFromDB($file[2]) as $comment) {
                     $ret .= "
                         <div id = comments>
@@ -310,8 +191,6 @@ class MemberView {
 
             return $ret;
         }
-
     }
-
 }
 

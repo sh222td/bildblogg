@@ -2,31 +2,32 @@
 
 require_once('./Model/loginModel.php');
 require_once('./Model/publishModel.php');
+require_once('./Controller/publishController.php');
 require_once('./View/loginView.php');
 require_once('./View/HTMLview.php');
 require_once('./View/memberView.php');
 require_once('./View/publishView.php');
 require_once('./cookieStorage.php');
 
-class loginController {
+class LoginController {
 
     private $username;
     private $password;
     private $htmlView;
     private $loginView;
     private $memberView;
+    private $publishController;
     private $cookieStorage;
     private $loginModel;
-    private $publishModel;
     private $errorMSG;
     private $publishView;
 
     public function __construct() {
         $this->htmlView = new HTMLView();
         $this->loginView = new LoginView();
-        $this->memberView = new memberView();
+        $this->memberView = new MemberView();
+        $this->publishController = new PublishController();
         $this->loginModel = new LoginModel();
-        $this->publishModel = new PublishModel();
         $this->publishView = new PublishView();
         $this->cookieStorage = new CookieStorage();
     }
@@ -40,78 +41,38 @@ class loginController {
     }
 
     public function startController() {
-        if ($this->memberView->didUserPressPublishButton()) {
-            return $this->htmlView->echoHTML($this->publishView->publishView());
-        }
+        $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 
         if ($this->memberView->didUserPressLogoutButton()) {
             $this->loginModel->killSession();
             $this->cookieStorage->unsetCookie();
             return $this->htmlView->echoHTML($this->loginView->show());
         }
-
-        if ($this->memberView->didUserPressDeleteCommentButton()) {
-            $chosenComment = $this->memberView->didUserPressDeleteCommentButton();
-            $this->publishModel->deleteComment($chosenComment);
-        }
-
-        //Checks if user want to upload a file then sends the input information to the publishModel for control and uploading.
-        if($this->publishView->uploadFile()) {
-            $this->publishView->setFileName();
-            $fileName = $this->publishView->getName();
-            $filePath = $this->publishView->getFileName();
-            $imageDescription = $this->publishView->getImageDescription();
-            $radioButton = $this->publishView->getRadioButtonValue();
-            $chmodValue = $this->publishView->getChmodValue();
-
-            if ($this->publishView->checkFile()) {
-                if ($this->publishModel->getFiles($fileName, $filePath, $imageDescription, $radioButton, $chmodValue)) {
-                    return $this->htmlView->echoHTML($this->memberView->loggedinView());
-                } else {
-                    $this->publishView->fileAlreadyExistsMessage();
-                    return $this->htmlView->echoHTML($this->publishView->publishView());
-                }
-            } else {
-                $this->publishView->errorFileMessage();
-                return $this->htmlView->echoHTML($this->publishView->publishView());
-            }
-        }
-
-        if ($this->memberView->didUserPressMemeCategory()) {
-            $this->publishModel->getFilesFromDB($this->memberView->didUserPressMemeCategory());
-        }
-        if ($this->memberView->didUserPressNatureCategory()) {
-            $this->publishModel->getFilesFromDB($this->memberView->didUserPressNatureCategory());
-        }
-        if ($this->memberView->didUserPressFoodCategory()) {
-            $this->publishModel->getFilesFromDB($this->memberView->didUserPressFoodCategory());
-        }
-        if ($this->memberView->didUserPressAlternativeCategory()) {
-            $this->publishModel->getFilesFromDB($this->memberView->didUserPressAlternativeCategory());
-        }
-
-        if ($this->memberView->didUserPressDeleteFileButton()) {
-            $chosenFile = $this->memberView->didUserPressDeleteFileButton();
-            $this->publishModel->deleteFile($chosenFile);
-        }
-
-        if ($this->memberView->didUserComment()) {
-            $filechoice = $this->memberView->didUserComment();
-            $comment = $this->memberView->getComment();
-            $this->publishModel->getComment($filechoice, $comment);
-        }
-
-        if ($this->publishView->didUserPressReturnButton()) {
-            return $this->htmlView->echoHTML($this->memberView->loggedinView());
-        }
-
+        /*
+         * if-sentence that checks if there is a session and which url is active and returns the suiting view
+         * the ?post action can return 2 different views from the publishController if the post was successful or not
+        */
         if ($this->loginModel->checkSession()) {
-            return $this->htmlView->echoHTML($this->memberView->loggedinView());
+          if (strpos($url,'?upload') !== false) {
+              $this->publishController->publisher();
+              return $this->htmlView->echoHTML($this->publishView->publishView());
+          }
+          else if (strpos($url,'?main') !== false) {
+              $this->publishController->publisher();
+              return $this->htmlView->echoHTML($this->memberView->loggedinView());
+          }
+          else if (strpos($url,'?post') !==false) {
+              return $this->publishController->publisher();
+          } else {
+              $this->publishController->publisher();
+              return $this->htmlView->echoHTML($this->memberView->loggedinView());
+          }
         }
 
         if ($this->cookieStorage->checkCookie()) {
             $this->memberView->setSavedCookieMSG();
             $this->loginModel->setSession();
+            $this->publishController->publisher();
             return $this->htmlView->echoHTML($this->memberView->loggedinView());
         }
 
@@ -137,11 +98,13 @@ class loginController {
 
     public function isValidUser() {
         $this->memberView->setLoginMSG();
+        $this->publishController->publisher();
         return $this->htmlView->echoHTML($this->memberView->loggedinView());
     }
 
     public function isSavedValidUser() {
         $this->memberView->setSavedLoginMSG();
+        $this->publishController->publisher();
         return $this->htmlView->echoHTML($this->memberView->loggedinView());
     }
 

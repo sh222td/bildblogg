@@ -1,33 +1,37 @@
 <?php
 require_once('./properties.php');
+require_once('settings.php');
 
-class PublishModel
-{
+class PublishModel {
 
     private $name;
     private $path;
     private $properties;
     private $fileErrorMSG;
+    private $settings;
+    private $ftpServer;
+    private $ftpUser;
+    private $ftpPassword;
 
     public function __construct() {
         $this->properties = new Properties();
+        $this->settings = new Settings();
+        $this->ftpServer = $this->settings->getFtpServer();
+        $this->ftpUser = $this->settings->getFtpUser();
+        $this->ftpPassword = $this->settings->getFtpPassword();
     }
 
     //Get the file and upload it to the FTP server and database.
-    public function getFiles($name, $path, $imageDescription, $radioButton, $chmodValue) {
+    public function getFiles($name, $path, $fileDescription, $radioButton, $chmodValue) {
         $this->name = $name;
         $this->path = $path;
 
-        //Settings for the connection.
-        $ftp_server = "ftp.sandrahansson.net";
-        $ftp_user_name = "135026-master";
-        $ftp_user_pass = "morotskaka";
         $remote_file = '/sandrahansson.net/public_html/bildblogg/images/'.$name;
         $url = 'http://sandrahansson.net/bildblogg/images/'.$name;
 
         //Connect to the server.
-        $conn_id = ftp_connect($ftp_server);
-        $login_result = ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
+        $conn_id = ftp_connect($this->ftpServer);
+        $login_result = ftp_login($conn_id, $this->ftpUser, $this->ftpPassword);
 
         if ($this->checkFile() !== true) {
             //Connect to database.
@@ -42,7 +46,7 @@ class PublishModel
                 ftp_close($conn_id);
 
                 //Add the file to the database
-                $description = strip_tags($imageDescription);
+                $description = strip_tags($fileDescription);
                 $sqlQuery = "INSERT INTO file VALUE ('', '$name', '$url', '$description', '$radioButton')";
                 $result = mysqli_query($db, $sqlQuery);
                 return true;
@@ -78,10 +82,10 @@ class PublishModel
 
         $files = [];
 
-        if ($categoryID == "Memes") {
-            //Asking a SQL question to the db and loop through the result.
-            $getMemeFiles = mysqli_query($db, "SELECT * FROM file WHERE category = 1");
-            while ($row = mysqli_fetch_assoc($getMemeFiles)) {
+        //Asking a SQL question to the db and loop through the result.
+        if ($categoryID != NULL) {
+            $getFiles = mysqli_query($db, "SELECT * FROM file WHERE category = $categoryID");
+            while ($row = mysqli_fetch_assoc($getFiles)) {
                 $url = $row['filepath'];
                 $description = $row['description'];
                 $fileID = $row['fileID'];
@@ -92,42 +96,7 @@ class PublishModel
             $reversedArr = array_reverse($files);
             return $reversedArr;
         }
-        if ($categoryID == "Natur") {
-            $getNatureFiles = mysqli_query($db, "SELECT * FROM file WHERE category = 2");
-            while ($row = mysqli_fetch_assoc($getNatureFiles)) {
-                $url = $row['filepath'];
-                $description = $row['description'];
-                $fileID = $row['fileID'];
-
-                $files[] = array($url, $description, $fileID);
-            }
-            $reversedArr = array_reverse($files);
-            return $reversedArr;
-        }
-        if ($categoryID == "Mat") {
-            $getFoodFiles = mysqli_query($db, "SELECT * FROM file WHERE category = 3");
-            while ($row = mysqli_fetch_assoc($getFoodFiles)) {
-                $url = $row['filepath'];
-                $description = $row['description'];
-                $fileID = $row['fileID'];
-
-                $files[] = array($url, $description, $fileID);
-            }
-            $reversedArr = array_reverse($files);
-            return $reversedArr;
-        }
-        if ($categoryID == "Övrigt") {
-            $getAlternativeFiles = mysqli_query($db, "SELECT * FROM file WHERE category = 4");
-            while ($row = mysqli_fetch_assoc($getAlternativeFiles)) {
-                $url = $row['filepath'];
-                $description = $row['description'];
-                $fileID = $row['fileID'];
-
-                $files[] = array($url, $description, $fileID);
-            }
-            $reversedArr = array_reverse($files);
-            return $reversedArr;
-        } else {
+        else {
             $result = mysqli_query($db, "SELECT * FROM file");
             while ($row = mysqli_fetch_assoc($result)) {
                 $url = $row['filepath'];
@@ -149,13 +118,10 @@ class PublishModel
         $row = mysqli_fetch_assoc($getFileName);
         $filename = $row['filename'];
 
-        $ftp_server = "ftp.sandrahansson.net";
-        $ftp_user_name = "135026-master";
-        $ftp_user_pass = "morotskaka";
         $file = '/sandrahansson.net/public_html/bildblogg/images/' . $filename;
 
-        $conn_id = ftp_connect($ftp_server);
-        $login_result = ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
+        $conn_id = ftp_connect($this->ftpServer);
+        $login_result = ftp_login($conn_id, $this->ftpUser, $this->ftpPassword);
 
         ftp_delete($conn_id, $file);
 

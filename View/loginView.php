@@ -9,7 +9,7 @@ class LoginView {
     private $fileErrorMSG;
 
     public function __construct() {
-        $this->loginModel = new loginModel();
+        $this->loginModel = new LoginModel();
         $this->loginMSG = "";
     }
 
